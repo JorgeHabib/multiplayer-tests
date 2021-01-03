@@ -1,10 +1,12 @@
-export function Classes() {
-    const classes = [];
-    classes.push({ className: 'Mage', life: '550', totalLife: '550', damage: 10, defense: 35, totalMana: 100, initialMana: 50, armor: 0, color: 'rgb(35, 168, 242)', stepMove: 24, side: 40, initialGold: 0, itens: [], buildings: [], skills: ['MageSkills-Q', 'MageSkills-E', 'MageSkills-R'], coolDown: [0, 6, 7], skillsManaCost: [0, 10, 100] });
-    classes.push({ className: 'Tank', life: '1000', totalLife: '1000', damage: 65, defense: 25, totalMana: 50, initialMana: 10, armor: 30, color: 'rgb(153, 102, 71)', stepMove: 24, side: 40, initialGold: 0, itens: [], buildings: [], skills: ['MageSkills-Q', 'MageSkills-E', 'MageSkills-R'], coolDown: [2, 6, 7], skillsManaCost: [0, 10, 100] });
-    classes.push({ className: 'God', life: '1500', totalLife: '1500', damage: 150, defense: 55, totalMana: 150, initialMana: 150, armor: 30, color: 'rgb(246, 189, 3)', stepMove: 24, side: 40, initialGold: 0, itens: [], buildings: [], skills: ['MageSkills-Q', 'MageSkills-E', 'MageSkills-R'], coolDown: [2, 6, 7], skillsManaCost: [0, 10, 100] });
-    classes.push({ className: 'Sped', life: '700', totalLife: '700', damage: 88, defense: 44, totalMana: 100, initialMana: 80, armor: 10, color: 'rgb(0, 242, 148)', stepMove: 24, side: 40, initialGold: 0, itens: [], buildings: [], skills: ['MageSkills-Q', 'MageSkills-E', 'MageSkills-R'], coolDown: [2, 6, 7], skillsManaCost: [0, 10, 100] });
+import { Mage, Tank, God } from './entity.js';
 
+export function Classes() {
+    const classes = [
+        new Mage(),
+        new Tank(),
+        new God()
+    ];
+    
     return classes;
 }
 
