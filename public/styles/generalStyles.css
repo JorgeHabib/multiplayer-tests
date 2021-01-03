@@ -1,0 +1,74 @@
+@font-face{
+    font-family:'digital-clock-font';
+    src: url('put_the_location_to_your_font.ttf or .otf');
+   }
+
+* {
+    margin: 0px;
+    padding: 0px;
+    outline: 0px;
+    box-sizing: border-box;
+}
+
+#screen {
+    margin-top: 10px;
+    background-image: url("../imgs/Background/background4.png");
+    background-size: contain;
+    background-color: rgb(24, 154, 53);
+    background-repeat: no-repeat;
+    background-position: center;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    image-rendering: -moz-crisp-edges;
+    width: 100%;
+}
+
+#myInfos {
+    width: 300px;
+    margin-top: 10px;
+    margin-left: 10px;
+    background-color: rgb(40, 40, 40);
+}
+
+#enemyInfos {
+    width: 300px;
+    margin-top: 10px;
+    background-color: rgb(40, 40, 40);
+}
+
+#ready {
+    width: 80%;
+    cursor: pointer;
+    color: black;
+    border: solid 2px black;
+    margin: 10px;
+}
+
+.notReady {
+    background-color: white;
+}
+
+.isReady {
+    background-color: red;
+    color: white;
+    border: solid 2px red;;
+}
+
+.preparingTimer {
+    font-family: 'Orbitron';
+    width: 90%;
+    font-size: 45px;
+    font-weight: bold;
+    text-align: center;
+    color: white;
+}
+
+.preparingTimerRed {
+    color: red;
+}
+
+body {
+    display: grid;
+    grid-template-columns: 300px 1fr 300px;
+    background-color: black;
+}

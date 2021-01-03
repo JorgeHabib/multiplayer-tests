@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>MyMoba</title>
+    <link rel="stylesheet" href="./styles/statusBarStyles.css" type='text/css'>
+    <link rel="stylesheet" href="./styles/generalStyles.css" type='text/css'>
+    <link rel="stylesheet" href="./styles/classStyles.css" type='text/css'>
+    <link rel="stylesheet" href="./styles/skillsStyles.css" type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Orbitron' rel='stylesheet' type='text/css'>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+
+<body>
+    <div id="myInfos"></div>
+    <canvas id="screen" width=1680 height=1680></canvas>
+    <div id="enemyInfos"></div>
+
+    <script type="module">
+        import * as utils from './utils.js';
+        import { renderScreen, insertMenuArea, createUpdate, updateStats, loadCoolDownSkills } from './renderScreen.js';
+        import createGame from './createGame.js';
+        import createKeyboardListener from './createKeyboardListener.js';
+        import { handleReady, handlePreparingMode } from './handleReady.js';
+        import { Classes, fitClasses, getSkillObject } from './classes.js';
+        import * as alias from './alias.js';
+
+        const socket = io();
+
+        const game = createGame();
+        const keyboardListener = createKeyboardListener(game, document, socket);
+
+        socket.on('connect', () => {
+            const playerId = socket.id;
+            console.log(`Player connected: ${playerId}`);
+
+            const flexibleHeight = window.innerHeight - 30;
+
+            const screen = document.getElementById('screen');
+            screen.style.height = `${flexibleHeight}px`;
+            renderScreen(screen, game, requestAnimationFrame, playerId);
+        });
+
+        socket.on('setup', (state) => {
+            const playerId = socket.id;
+            game.setState(state);
+            const screen = document.getElementById('screen');
+
+            if (game.state.players[playerId].spect === false) {
+                keyboardListener.registerPlayerId(playerId);
+                keyboardListener.subscribeObserver((command) => {
+                    socket.emit(command.type, command);
+                });
+
+                addEventListener('mousemove', (e) => {
+                    const rect = screen.getBoundingClientRect();
+                    const scaleX = screen.width / rect.width;
+                    const scaleY = screen.height / rect.height;
+
+                    game.state.players[playerId].mouse = {
+                        mouseX: (e.clientX - rect.left) * scaleX,
+                        mouseY: (e.clientY - rect.top) * scaleY
+                    }
+                })
+
+                const button = document.createElement('button');
+                button.innerHTML = 'READY!';
+                button.id = 'ready';
+                button.className = 'notReady'
+                button.addEventListener('click', () => handleReady(button, socket, game, playerId));
+
+                const divClasses = document.createElement('div');
+                divClasses.id = 'classDesc';
+                divClasses.className = 'classDesc';
+                fitClasses(divClasses, game, playerId);
+
+                const infos = document.getElementById('myInfos');
+                infos.appendChild(divClasses);
+                infos.appendChild(button);
+            }
+        });
+
+        socket.on('controll-player', (command) => {
+            console.log(`Receiving ${command.type} -> ${command.playerId}`);
+
+            const playerId = socket.id;
+
+            game.movePlayer(command);
+        });
+
+        socket.on('abitily-used', (command) => {
+            console.log(`Receiving ${command.type} -> ${command.playerId}`);
+
+            const playerId = socket.id;
+            const updateObject = createUpdate();
+
+            let enemyId;
+            if (game.state.blueId === playerId) {
+                enemyId = game.state.redId;
+            } else {
+                enemyId = game.state.blueId;
+            }
+
+            game.spellPlayer(command);
+            updateStats(game, document, playerId, enemyId);
+        })
+
+        socket.on('add-player', (command) => {
+            console.log(`Receiving ${command.type} -> ${command.playerId}`);
+            game.addPlayer(command);
+        });
+
+        socket.on('remove-player', (command) => {
+            console.log(`Receiving ${command.type} -> ${command.playerId}`);
+            game.removePlayer(command);
+        });
+
+        socket.on('blue-side-ready', (command) => {
+            const playerId = socket.id;
+
+            console.log(`Receiving ${command.type} -> ${command.playerId}`);
+            game.setReady(command);
+
+            if (game.state.gameStarted) {
+                const blueSideChar = `${game.state.players[game.state.blueId].class.className}Skills`;
+                const redSideChar = `${game.state.players[game.state.redId].class.className}Skills`;
+                const skills = getSkillObject(game, blueSideChar, redSideChar);
+                game.setupSkills(skills);
+                loadCoolDownSkills(game, document, playerId);
+
+                const button = document.getElementById('ready');
+                const classInfo = document.getElementById('classDesc');
+
+                classInfo.remove();
+                button.remove();
+
+                handlePreparingMode(document, game);
+                insertMenuArea(game, playerId, document);
+            }
+        });
+
+        socket.on('red-side-ready', (command) => {
+            const playerId = socket.id;
+
+            console.log(`Receiving ${command.type} -> ${command.playerId}`);
+            game.setReady(command);
+
+            if (game.state.gameStarted) {
+                const blueSideChar = `${game.state.players[game.state.blueId].class.className}Skills`;
+                const redSideChar = `${game.state.players[game.state.redId].class.className}Skills`;
+                console.log(redSideChar);
+                const skills = getSkillObject(game, blueSideChar, redSideChar);
+                game.setupSkills(skills);
+                loadCoolDownSkills(game, document, playerId);
+
+                const button = document.getElementById('ready');
+                const classInfo = document.getElementById('classDesc');
+
+                classInfo.remove();
+                button.remove();
+
+                handlePreparingMode(document, game);
+                insertMenuArea(game, playerId, document);
+            }
+        });
+
+        socket.on('forceDisconnect', socket.disconnect);
+
+    </script>
+</body>
+
+</html>

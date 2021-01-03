@@ -1,0 +1,157 @@
+.statusBar {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.hpBar {
+    width: 80%;
+    height: 60px;
+    background-color: #CCC;
+    color: white;
+    font-size: 40px;
+    text-align: center;
+    font-weight: bold;
+    vertical-align: auto;
+}
+
+.hpSlide {
+    height: 100%;
+    background-color: red;
+}
+
+.manaSlide {
+    height: 100%;
+    background-color: lightskyblue;
+}
+
+.manaBar {
+    margin-top: 10px;
+    width: 80%;
+    height: 30px;
+    background-color: #AAA;
+    font-size: 22px;
+    text-align: center;
+    vertical-align: auto;
+}
+
+.statusBarEnemy {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.hpBarEnemy {
+    width: 80%;
+    height: 60px;
+    background-color: #CCC;
+    color: white;
+    font-size: 0;
+    text-align: center;
+    font-weight: bold;
+    vertical-align: auto;
+}
+
+.hpSlideEnemy {
+    height: 100%;
+    background-color: red;
+}
+
+.manaSlideEnemy {
+    height: 100%;
+    background-color: lightskyblue;
+}
+
+.manaBarEnemy {
+    margin-top: 10px;
+    width: 80%;
+    height: 30px;
+    background-color: #AAA;
+    font-size: 0;
+    text-align: center;
+    vertical-align: auto;
+}
+
+.inventory {
+    background-color: #333;
+    margin-top: 20px;
+    height: 100px;
+    width: 80%;
+    border: solid 1px white;
+}
+
+.stats {
+    background-color: #333;
+    margin-top: 20px;
+    height: 30px;
+    width: 80%;
+    border: solid 1px white;
+    display: grid;
+    grid-template-columns: 80% 20%;
+}
+
+.statsPlace {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.goldBox {
+    border: solid 1px white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.goldValue {
+    color: rgb(241, 175, 9);
+    font-weight: bold;
+}
+
+.damageBox {
+    border: solid 1px white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.damageValue {
+    color: white;
+    font-weight: bold;
+}
+
+.armorBox {
+    border: solid 1px white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.armorValue {
+    color: white;
+    font-weight: bold;
+}
+
+.rollButton {
+    background-color: #DDD;
+    text-align: center;
+}
+
+.store {
+    background-color: #333;
+    margin-top: 20px;
+    height: 120px;
+    width: 80%;
+    border: solid 1px white;
+}
+
+.buildings {
+    background-color: #333;
+    margin-top: 20px;
+    height: 200px;
+    width: 80%;
+    border: solid 1px white;
+}
