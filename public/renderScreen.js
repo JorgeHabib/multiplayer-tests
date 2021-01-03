@@ -1,3 +1,5 @@
+import { createInfo, createIcon, createButton } from "./interface";
+
 export function renderScreen(screen, game, requestAnimationFrame, currentPlayerId) {
     const c = screen.getContext('2d');
 
@@ -91,74 +93,38 @@ export function insertMenuArea(game, playerId, document) {
         enemy = game.state.players[enemyId];
     }
 
-    const statusBarEnemy = document.createElement('div');
-    statusBarEnemy.id = 'statusBarEnemy';
-    statusBarEnemy.classList.add('statusBarEnemy');
+    const statusBarEnemy = createInfo('statusBarEnemy');
 
-    const hpBarEnemy = document.createElement('div');
-    hpBarEnemy.id = 'hpBarEnemy';
-    hpBarEnemy.classList.add('hpBarEnemy');
-    const hpSlideEnemy = document.createElement('div');
-    hpSlideEnemy.id = 'hpSlideEnemy';
-    hpSlideEnemy.classList.add('hpSlideEnemy');
+    const hpBarEnemy = createInfo('hpBarEnemy');
+    const hpSlideEnemy = createInfo('hpSlideEnemy');
     hpBarEnemy.appendChild(hpSlideEnemy);
 
-    const manaBarEnemy = document.createElement('div');
-    manaBarEnemy.id = 'manaBarEnemy';
-    manaBarEnemy.classList.add('manaBarEnemy');
-    const manaSlideEnemy = document.createElement('div');
-    manaSlideEnemy.id = 'manaSlideEnemy';
-    manaSlideEnemy.classList.add('manaSlideEnemy');
+    const manaBarEnemy = createInfo('manaBarEnemy');
+    const manaSlideEnemy = createInfo('manaSlideEnemy');
     manaBarEnemy.appendChild(manaSlideEnemy);
 
-    const inventory = document.createElement('div');
-    inventory.id = 'inventory';
-    inventory.classList.add('inventory');
+    const inventory = createInfo('inventory');
+    const stats = creteInfo('stats');
+    const statsPlace = createInfo('statsPlace');
 
-    const stats = document.createElement('div');
-    stats.id = 'stats';
-    stats.classList.add('stats');
-
-    const statsPlace = document.createElement('div');
-    statsPlace.id = 'statsPlace';
-    statsPlace.classList.add('statsPlace');
-
-    const goldBox = document.createElement('div');
-    const goldIcon = document.createElement('img');
-    goldIcon.src = './imgs/Icons/goldIcon.png';
-    goldIcon.classList.add('goldIcon');
-    const goldValue = document.createElement('div');
-    goldValue.id = 'goldValue';
-    goldValue.classList.add('goldValue');
+    const goldBox = createInfo('goldBox');
+    const goldIcon = createIcon('goldIcon');
+    const goldValue = createInfo('goldValue');
     goldValue.innerHTML = player.gold;
-    goldBox.id = 'goldBox';
-    goldBox.classList.add('goldBox');
     goldBox.appendChild(goldIcon);
     goldBox.appendChild(goldValue);
 
-    const damageBox = document.createElement('div');
-    const damageIcon = document.createElement('img');
-    damageIcon.src = './imgs/Icons/damageIcon.png';
-    damageIcon.classList.add('damageIcon');
-    const damageValue = document.createElement('div');
-    damageValue.id = 'damageValue';
-    damageValue.classList.add('damageValue');
+    const damageBox = createInfo('damageBox');
+    const damageIcon = createIcon('damageIcon');
+    const damageValue = createInfo('damageValue');
     damageValue.innerHTML = player.damage;
-    damageBox.id = 'damageBox';
-    damageBox.classList.add('damageBox');
     damageBox.appendChild(damageIcon);
     damageBox.appendChild(damageValue);
 
-    const armorBox = document.createElement('div');
-    const armorIcon = document.createElement('img');
-    armorIcon.src = './imgs/Icons/armorIcon.png';
-    armorIcon.classList.add('armorIcon');
-    const armorValue = document.createElement('div');
-    armorValue.id = 'armorValue';
-    armorValue.classList.add('armorValue');
+    const armorBox = createInfo('armorBox');
+    const armorIcon = createIcon('armorIcon');
+    const armorValue = createInfo(armorValue);
     armorValue.innerHTML = player.armor;
-    armorBox.id = 'armorBox';
-    armorBox.classList.add('armorBox');
     armorBox.appendChild(armorIcon);
     armorBox.appendChild(armorValue);
 
@@ -166,22 +132,16 @@ export function insertMenuArea(game, playerId, document) {
     statsPlace.appendChild(armorBox);
     statsPlace.appendChild(goldBox);
 
-    const rollButton = document.createElement('button');
-    rollButton.classList.add('rollButton');
-    rollButton.id = 'rollButton';
+    const rollButton = createButton('rollButton');
     rollButton.onclick = handleRoll;
     rollButton.innerHTML = '?';
 
     stats.appendChild(statsPlace);
     stats.appendChild(rollButton);
 
-    const store = document.createElement('div');
-    store.id = 'store';
-    store.classList.add('store');
+    const store = createInfo('store');
 
-    const skills = document.createElement('div');
-    skills.id = 'skills';
-    skills.classList.add('skills');
+    const skills = createInfo('skills');
 
     player.class.skills.forEach((skill) => {
         const container = document.createElement('div');
@@ -204,25 +164,12 @@ export function insertMenuArea(game, playerId, document) {
     })
 
 
-    const buildings = document.createElement('div');
-    buildings.id = 'buildings';
-    buildings.classList.add('buildings');
+    const buildings = createInfo('buildings');
 
-    const inventoryEnemy = document.createElement('div');
-    inventoryEnemy.id = 'inventoryEnemy';
-    inventoryEnemy.classList.add('inventoryEnemy');
-
-    const statsEnemy = document.createElement('div');
-    statsEnemy.id = 'statsEnemy';
-    statsEnemy.classList.add('statsEnemy');
-
-    const storeEnemy = document.createElement('div');
-    storeEnemy.id = 'storeEnemy';
-    storeEnemy.classList.add('storeEnemy');
-
-    const buildingsEnemy = document.createElement('div');
-    buildingsEnemy.id = 'buildingsEnemy';
-    buildingsEnemy.classList.add('buildingsEnemy');
+    const inventoryEnemy = createInfo('inventoryEnemy');
+    const statsEnemy = createInfo('statsEnemy');
+    const storeEnemy = createInfo('storeEnemy');
+    const buildingsEnemy = createInfo('buildingsEnemy');
 
     statusBar.appendChild(hpBar);
     statusBar.appendChild(manaBar);
