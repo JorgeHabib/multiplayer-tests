@@ -1,4 +1,4 @@
-import { createInfo, createIcon, createButton } from "./interface";
+import { createInfo, createIcon, createButton } from './interface.js';
 
 export function renderScreen(screen, game, requestAnimationFrame, currentPlayerId) {
     const c = screen.getContext('2d');
@@ -62,23 +62,14 @@ export function insertMenuArea(game, playerId, document) {
     const myInfos = document.getElementById('myInfos');
     const enemyInfos = document.getElementById('enemyInfos');
 
-    const statusBar = document.createElement('div');
-    statusBar.id = 'statusBar';
-    statusBar.classList.add('statusBar');
+    const statusBar = createInfo('statusBar');
 
-    const hpBar = document.createElement('div');
-    hpBar.classList.add('hpBar');
-    const hpSlide = document.createElement('div');
-    hpSlide.id = 'hpSlide';
-    hpSlide.classList.add('hpSlide');
+    const hpBar = createInfo('hpBar');
+    const hpSlide = createInfo('hpSlide');
     hpBar.appendChild(hpSlide);
 
-    const manaBar = document.createElement('div');
-    manaBar.id = 'manaBar';
-    manaBar.classList.add('manaBar');
-    const manaSlide = document.createElement('div');
-    manaSlide.id = 'manaSlide';
-    manaSlide.classList.add('manaSlide');
+    const manaBar = createInfo('manaBar');
+    const manaSlide = createInfo('manaSlide');
     manaBar.appendChild(manaSlide);
 
 
