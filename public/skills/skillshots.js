@@ -1,5 +1,5 @@
-import moveSkillShootRegular from './movement.js';
-import { nothingSkills, MageSkills } from './classesSkills.js';
+import moveSkillShootRegular from '../movement.js';
+import { nothingSkills, MageSkills } from './classes.js';
 
 export function spellKeyPressed(keyPressed){
     if (keyPressed === 'q' || keyPressed === 'Q' ||
