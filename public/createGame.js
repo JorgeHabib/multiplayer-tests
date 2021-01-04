@@ -1,4 +1,5 @@
-import { movementKey, movePlayer } from './movement.js';
+import { movementKeyPressed, movePlayer } from './movement.js';
+import { spellKeyPressed } from './spells.js';
 
 export default function createGame() {
     const state = {
@@ -116,81 +117,30 @@ export default function createGame() {
         }
     }
 
-    function spellPlayer(command) {
-        notifyAll(command);
+    const keyPressed = command.keyPressed;
+    const playerId = command.playerId;
+    const player = state.players[playerId];
+    const moveFunction = acceptedMoves[keyPressed];
 
-        function getSkillIndex(keyPressed) {
-            if (keyPressed === 'q' || keyPressed === 'Q')
-                return 0;
-            else if (keyPressed === 'e' || keyPressed === 'E')
-                return 1;
-            else if (keyPressed === 'r' || keyPressed === 'R')
-                return 2;
-            else
-                return -1;
-        };
+    if (player && moveFunction) {
+        moveFunction(player);
+    }
 
-        const keyPressed = command.keyPressed;
-        const playerId = command.playerId;
-        const player = state.players[playerId];
-
-        const skillIndex = getSkillIndex(keyPressed);
-
-        const skillCompleteName = skillIndex >= 0 ? player.class.skills[skillIndex] : 'nothingSkills-nothing';
-        const classNameAndSkillArray = skillCompleteName.split('-');
-
-        command.skillCompleteName = skillCompleteName;
-
-        const skillName = classNameAndSkillArray[1];
-
-        const skillFunctionsBlue = state.allSkills['blueSideSkills'];
-        const skillFunctionsRed = state.allSkills['redSideSkills'];
-
-        const skillNothing = state.allSkills['nothingSkills'];
-
-        let skillFunction;
-
-        if (skillIndex < 0) {
-            skillFunction = skillNothing[skillName];
-        } else if (playerId === state.blueId) {
-            skillFunction = skillFunctionsBlue[skillName];
-        } else if (playerId === state.redId) {
-            skillFunction = skillFunctionsRed[skillName];
-        }
-
-        if (player && skillFunction) {
-            skillFunction(command);
-        }
-
-        return;
-    };
-
-        const keyPressed = command.keyPressed;
-        const playerId = command.playerId;
-        const player = state.players[playerId];
-        const moveFunction = acceptedMoves[keyPressed];
-
-        if (player && moveFunction) {
-            moveFunction(player);
-        }
-
-        return;
+    return;
     };
 
     function handleKeyboardEventSERVER(command) {
         const keyPressed = command.keyPressed;
 
-        if (movementKey(keyPressed)) {
+        if ( movementKeyPressed(keyPressed) ) {
             command.type = 'controll-player';
             acceptedMoves = movePlayer(this, command);
         }
 
-        else if (keyPressed === 'q' || keyPressed === 'Q' ||
-            keyPressed === 'e' || keyPressed === 'E' ||
-            keyPressed === 'r' || keyPressed === 'R') {
+        else if ( spellKeyPressed(keyPressed) ) {
             if (state.gameStarted) {
                 command.type = 'abitily-used';
-                spellPlayer(command);
+                spellPlayer(this, keyPressed, command);
             }
         }
     }

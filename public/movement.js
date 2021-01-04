@@ -1,6 +1,6 @@
 import createGame from "./createGame";
 
-export function movementKey(keyPressed){
+export function movementKeyPressed(keyPressed){
     if (keyPressed === 'w' || keyPressed === 'W' ||
         keyPressed === 's' || keyPressed === 'S' ||
         keyPressed === 'a' || keyPressed === 'A' ||
@@ -51,8 +51,8 @@ function horizontal_movement(state, player, direction){
 }
 
 export function movePlayer(game, command) {
-    game.player = player;
-    game.state = state;
+    player = game.player;
+    state = game.state;
 
     game.notifyAll(command);
 
