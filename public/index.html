@@ -90,7 +90,7 @@
             game.movePlayer(command);
         });
 
-        socket.on('abitily-used', (command) => {
+        socket.on('ability-used', (command) => {
             console.log(`Receiving ${command.type} -> ${command.playerId}`);
 
             const playerId = socket.id;

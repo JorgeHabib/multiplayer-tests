@@ -69,7 +69,7 @@ export function handleKeyboardEventSERVER(game, command) {
 
     else if ( skillKeyPressed(keyPressed) ) {
         if (state.gameStarted) {
-            command.type = 'abitily-used';
+            command.type = 'ability-used';
             skillPlayer(game, keyPressed, command);
         }
     }
