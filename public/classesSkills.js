@@ -15,11 +15,11 @@ export const MageSkills = {
             return;
         }
 
-        if (game.state.players[command.playerId].cooldown[0] === 0) {
+        if (game.state.players[command.playerId].coolDown[0] === 0) {
 
             throwSkillShoot(command, 100, 10, 'regular', 10);
 
-            game.state.players[command.playerId].cooldown[0] = game.state.players[command.playerId].class.coolDown[0];
+            game.state.players[command.playerId].coolDown[0] = game.state.players[command.playerId].class.coolDown[0];
             initiateCooldownDrop(game, command, 0);
         }
     },
@@ -31,19 +31,19 @@ export const MageSkills = {
             return;
         }
 
-        if (game.state.players[command.playerId].cooldown[1] === 0) {
+        if (game.state.players[command.playerId].coolDown[1] === 0) {
 
             heal(game, command, 100);
 
-            game.state.players[command.playerId].cooldown[1] = game.state.players[command.playerId].class.coolDown[1];
+            game.state.players[command.playerId].coolDown[1] = game.state.players[command.playerId].class.coolDown[1];
             initiateCooldownDrop(game, command, 1);
         }
     },
 
     R: function (command) {
-        if (game.state.players[command.playerId].cooldown[2] === 0) {
+        if (game.state.players[command.playerId].coolDown[2] === 0) {
 
-            game.state.players[command.playerId].cooldown[2] = game.state.players[command.playerId].class.coolDown[2];
+            game.state.players[command.playerId].coolDown[2] = game.state.players[command.playerId].class.coolDown[2];
             initiateCooldownDrop(game, command, 2);
         }
     },
