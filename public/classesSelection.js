@@ -1,4 +1,4 @@
-import { Mage, Tank, God } from './entity.js';
+import { Mage, Tank, God } from './classes.js';
 
 export function Classes() {
     const classes = [
