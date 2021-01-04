@@ -1,4 +1,4 @@
-export function movementKeyPressed(keyPressed){
+function movementKeyPressed(keyPressed){
     if (keyPressed === 'w' || keyPressed === 'W' ||
         keyPressed === 's' || keyPressed === 'S' ||
         keyPressed === 'a' || keyPressed === 'A' ||
@@ -8,7 +8,7 @@ export function movementKeyPressed(keyPressed){
     return false;
 }
 
-export function skillKeyPressed(keyPressed){
+function skillKeyPressed(keyPressed){
     if (keyPressed === 'q' || keyPressed === 'Q' ||
         keyPressed === 'e' || keyPressed === 'E' ||
         keyPressed === 'r' || keyPressed === 'R')
@@ -56,5 +56,21 @@ export default function createKeyboardListener(game, document, socket) {
     return {
         registerPlayerId,
         subscribeObserver
+    }
+}
+
+export function handleKeyboardEventSERVER(game, command) {
+    const keyPressed = command.keyPressed;
+
+    if ( movementKeyPressed(keyPressed) ) {
+        command.type = 'controll-player';
+        acceptedMoves = movePlayer(game, command);
+    }
+
+    else if ( skillKeyPressed(keyPressed) ) {
+        if (state.gameStarted) {
+            command.type = 'abitily-used';
+            skillPlayer(game, keyPressed, command);
+        }
     }
 }

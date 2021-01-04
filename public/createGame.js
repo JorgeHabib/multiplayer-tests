@@ -1,6 +1,6 @@
 import { movePlayer } from './movement.js';
 import { skillPlayer, handleSkillShoots, collisionSkillPlayer, collisionSkillWall, collisionSkillWall } from './skills/skillshots.js';
-import { movementKeyPressed, skillKeyPressed } from './keyboard.js';
+import { handleKeyboardEventSERVER } from './keyboard.js';
 
 export default function createGame() {
     const state = {
@@ -125,22 +125,6 @@ export default function createGame() {
 
     if (player && moveFunction) {
         moveFunction(player);
-    }
-
-    function handleKeyboardEventSERVER(command) {
-        const keyPressed = command.keyPressed;
-
-        if ( movementKeyPressed(keyPressed) ) {
-            command.type = 'controll-player';
-            acceptedMoves = movePlayer(this, command);
-        }
-
-        else if ( skillKeyPressed(keyPressed) ) {
-            if (state.gameStarted) {
-                command.type = 'abitily-used';
-                skillPlayer(this, keyPressed, command);
-            }
-        }
     }
 
     function removePlayer(command) {
