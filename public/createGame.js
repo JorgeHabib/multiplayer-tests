@@ -1,5 +1,5 @@
 import { movementKeyPressed, movePlayer } from './movement.js';
-import { spellKeyPressed } from './spells.js';
+import { spellKeyPressed, spellPlayer, handleSkillShoots, collisionSkillPlayer, collisionSkillWall, collisionSkillWall } from './spells.js';
 
 export default function createGame() {
     const state = {
@@ -126,9 +126,6 @@ export default function createGame() {
         moveFunction(player);
     }
 
-    return;
-    };
-
     function handleKeyboardEventSERVER(command) {
         const keyPressed = command.keyPressed;
 
@@ -247,75 +244,6 @@ export default function createGame() {
         }
     }
 
-    function handleSkillShoots(objSkill, command) {
-        const player = state.players[command.playerId];
-
-        if (objSkill.type === 'regular') {
-            const skillShootObject = {
-                x: player.x,
-                y: player.y,
-                xi: player.x,
-                yi: player.y,
-                xf: command.mouseX,
-                yf: command.mouseY,
-                radius: objSkill.radius,
-            }
-
-            const velVector = {
-                x: skillShootObject.xf - skillShootObject.xi,
-                y: skillShootObject.yf - skillShootObject.yi
-            }
-
-            let vectorModule = velVector.x * velVector.x + velVector.y * velVector.y;
-            vectorModule = Math.sqrt(vectorModule);
-
-            velVector.x /= vectorModule;
-            velVector.y /= vectorModule;
-
-            state.skillShoots.push(skillShootObject);
-            const index = state.skillShoots.length - 1;
-            moveSkillShootRegular(objSkill, velVector, command, index);
-        }
-    }
-
-    function moveSkillShootRegular(objSkill, velVector, command, index) {
-        velVector.x *= objSkill.velocity;
-        velVector.y *= objSkill.velocity;
-
-        const skillLoop = setInterval(function () {
-            const skill = state.skillShoots[index];
-
-            skill.x += velVector.x;
-            skill.y += velVector.y;
-
-            if (collisionSkillWall(skill, command) || collisionSkillStructure(skill, command) || collisionSkillPlayer(skill, command)) {
-                clearInterval(skillLoop);
-                state.skillShoots.splice(index, 1);
-                console.log('HIT PLAYER');
-            }
-        }, 3);
-    }
-
-    function collisionSkillWall(skill, command) {
-        command.type = 'damage-to-wall';
-        //VERIFICAR CAMINHO A SER SEGUIDO PELA SKILL
-        if (state.mapMatrix[Math.floor(skill.x)][Math.floor(skill.y)]) {
-            return true;
-        }
-
-        return false;
-    }
-
-    function collisionSkillPlayer(skill, command) {
-        command.type = 'damage-to-player';
-        return false;
-    }
-
-    function collisionSkillStructure(skill, command) {
-        command.type = 'damage-to-structure';
-        return false;
-    }
-
     return {
         state,
         movePlayer,
@@ -334,4 +262,5 @@ export default function createGame() {
         handleSkillShoots,
         setServerSide
     };
+
 }

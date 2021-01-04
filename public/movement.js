@@ -51,8 +51,8 @@ function horizontal_movement(state, player, direction){
 }
 
 export function movePlayer(game, command) {
-    player = game.player;
-    state = game.state;
+    const state = game.state;
+    const player = game.player;
 
     game.notifyAll(command);
 
@@ -67,4 +67,23 @@ export function movePlayer(game, command) {
     }
 
     return acceptedMoves;
+}
+
+export function moveSkillShootRegular(game, objSkill, velVector, command, index) {
+    const state = game.state;
+    velVector.x *= objSkill.velocity;
+    velVector.y *= objSkill.velocity;
+
+    const skillLoop = setInterval(function () {
+        const skill = state.skillShoots[index];
+
+        skill.x += velVector.x;
+        skill.y += velVector.y;
+
+        if (collisionSkillWall(skill, command) || collisionSkillStructure(skill, command) || collisionSkillPlayer(skill, command)) {
+            clearInterval(skillLoop);
+            state.skillShoots.splice(index, 1);
+            console.log('HIT PLAYER');
+        }
+    }, 3);
 }

@@ -1,3 +1,5 @@
+import moveSkillShootRegular from './movement.js';
+
 export function spellKeyPressed(keyPressed){
     if (keyPressed === 'q' || keyPressed === 'Q' ||
         keyPressed === 'e' || keyPressed === 'E' ||
@@ -19,7 +21,7 @@ function getSkillIndex(keyPressed) {
 
 export function spellPlayer(game, keyPressed, command) {
 
-    state = game.state;
+    const state = game.state;
     game.notifyAll(command);
 
     const keyPressed = command.keyPressed;
@@ -55,4 +57,56 @@ export function spellPlayer(game, keyPressed, command) {
     }
 
     return;
-};
+}
+
+export function handleSkillShoots(game, objSkill, command) {
+    const state = game.state;
+    const player = state.players[command.playerId];
+
+    if (objSkill.type === 'regular') {
+        const skillShootObject = {
+            x: player.x,
+            y: player.y,
+            xi: player.x,
+            yi: player.y,
+            xf: command.mouseX,
+            yf: command.mouseY,
+            radius: objSkill.radius,
+        }
+
+        const velVector = {
+            x: skillShootObject.xf - skillShootObject.xi,
+            y: skillShootObject.yf - skillShootObject.yi
+        }
+
+        let vectorModule = velVector.x * velVector.x + velVector.y * velVector.y;
+        vectorModule = Math.sqrt(vectorModule);
+
+        velVector.x /= vectorModule;
+        velVector.y /= vectorModule;
+
+        state.skillShoots.push(skillShootObject);
+        const index = state.skillShoots.length - 1;
+        moveSkillShootRegular(game, objSkill, velVector, command, index);
+    }
+}
+
+export function collisionSkillWall(skill, command) {
+    command.type = 'damage-to-wall';
+    //VERIFICAR CAMINHO A SER SEGUIDO PELA SKILL
+    if (state.mapMatrix[Math.floor(skill.x)][Math.floor(skill.y)]) {
+        return true;
+    }
+
+    return false;
+}
+
+export function collisionSkillPlayer(skill, command) {
+    command.type = 'damage-to-player';
+    return false;
+}
+
+export function collisionSkillStructure(skill, command) {
+    command.type = 'damage-to-structure';
+    return false;
+}
