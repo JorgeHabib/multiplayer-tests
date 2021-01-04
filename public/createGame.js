@@ -1,5 +1,5 @@
 import { movementKeyPressed, movePlayer } from './movement.js';
-import { spellKeyPressed, spellPlayer, handleSkillShoots, collisionSkillPlayer, collisionSkillWall, collisionSkillWall } from './spells.js';
+import { spellKeyPressed, spellPlayer, handleSkillShoots, collisionSkillPlayer, collisionSkillWall, collisionSkillWall } from './skills/skillshots.js';
 
 export default function createGame() {
     const state = {
