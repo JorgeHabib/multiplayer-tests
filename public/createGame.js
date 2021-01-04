@@ -1,5 +1,6 @@
-import { movementKeyPressed, movePlayer } from './movement.js';
-import { spellKeyPressed, spellPlayer, handleSkillShoots, collisionSkillPlayer, collisionSkillWall, collisionSkillWall } from './skills/skillshots.js';
+import { movePlayer } from './movement.js';
+import { skillPlayer, handleSkillShoots, collisionSkillPlayer, collisionSkillWall, collisionSkillWall } from './skills/skillshots.js';
+import { movementKeyPressed, skillKeyPressed } from './keyboard.js';
 
 export default function createGame() {
     const state = {
@@ -134,10 +135,10 @@ export default function createGame() {
             acceptedMoves = movePlayer(this, command);
         }
 
-        else if ( spellKeyPressed(keyPressed) ) {
+        else if ( skillKeyPressed(keyPressed) ) {
             if (state.gameStarted) {
                 command.type = 'abitily-used';
-                spellPlayer(this, keyPressed, command);
+                skillPlayer(this, keyPressed, command);
             }
         }
     }
@@ -255,7 +256,7 @@ export default function createGame() {
         gameStarted,
         preparationMode,
         subscribeObserver,
-        spellPlayer,
+        skillPlayer,
         setupSkills,
         notifyAll,
         handleKeyboardEventSERVER,

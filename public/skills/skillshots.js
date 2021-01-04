@@ -1,14 +1,6 @@
 import moveSkillShootRegular from '../movement.js';
 import { nothingSkills, MageSkills } from './classes.js';
 
-export function spellKeyPressed(keyPressed){
-    if (keyPressed === 'q' || keyPressed === 'Q' ||
-        keyPressed === 'e' || keyPressed === 'E' ||
-        keyPressed === 'r' || keyPressed === 'R')
-            return true;
-    return false;
-}
-
 function getSkillIndex(keyPressed) {
     if (keyPressed === 'q' || keyPressed === 'Q')
         return 0;
@@ -20,7 +12,7 @@ function getSkillIndex(keyPressed) {
         return -1;
 };
 
-export function spellPlayer(game, keyPressed, command) {
+export function skillPlayer(game, keyPressed, command) {
 
     const state = game.state;
     game.notifyAll(command);

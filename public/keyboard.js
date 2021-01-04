@@ -1,3 +1,21 @@
+export function movementKeyPressed(keyPressed){
+    if (keyPressed === 'w' || keyPressed === 'W' ||
+        keyPressed === 's' || keyPressed === 'S' ||
+        keyPressed === 'a' || keyPressed === 'A' ||
+        keyPressed === 'd' || keyPressed === 'D')
+            return true;
+
+    return false;
+}
+
+export function skillKeyPressed(keyPressed){
+    if (keyPressed === 'q' || keyPressed === 'Q' ||
+        keyPressed === 'e' || keyPressed === 'E' ||
+        keyPressed === 'r' || keyPressed === 'R')
+            return true;
+    return false;
+}
+
 export default function createKeyboardListener(game, document, socket) {
     const state = {
         observers: []
