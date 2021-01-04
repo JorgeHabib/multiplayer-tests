@@ -1,5 +1,5 @@
 import moveSkillShootRegular from './movement.js';
-import { nothingSkills, MageSkills } from './skills.js';
+import { nothingSkills, MageSkills } from './classesSkills.js';
 
 export function spellKeyPressed(keyPressed){
     if (keyPressed === 'q' || keyPressed === 'Q' ||
@@ -92,6 +92,17 @@ export function handleSkillShoots(game, objSkill, command) {
     }
 }
 
+export function throwSkillShoot(command, damage, velocity, type, radius) {
+    const objShoot = {
+        type,
+        damage,
+        velocity,
+        radius
+    }
+
+    game.handleSkillShoots(game, objShoot, command);
+}
+
 export function collisionSkillWall(skill, command) {
     command.type = 'damage-to-wall';
     //VERIFICAR CAMINHO A SER SEGUIDO PELA SKILL
@@ -113,25 +124,6 @@ export function collisionSkillStructure(skill, command) {
 }
 
 export function getSkillObject(game, blueSideChar, redSideChar) {
-    function heal(game, command, ammount) {
-        game.state.players[command.playerId].life += ammount;
-
-        if (game.state.players[command.playerId].life > game.state.players[command.playerId].totalLife) {
-            game.state.players[command.playerId].life = game.state.players[command.playerId].totalLife;
-        }
-    }
-
-    function throwSkillShoot(command, damage, velocity, type, radius) {
-        const objShoot = {
-            type,
-            damage,
-            velocity,
-            radius
-        }
-
-        game.handleSkillShoots(game, objShoot, command);
-    }
-
     const skills = {
         nothingSkills,
         MageSkills,

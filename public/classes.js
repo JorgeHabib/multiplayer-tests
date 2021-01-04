@@ -30,7 +30,7 @@ export class Mage extends Hero {
         this.side = 40;
 
         this.set_status('550', 10, 35, 0, 50, 100);
-        
+
         this.skills = ['MageSkills-Q', 'MageSkills-E', 'MageSkills-R'];
         this.coolDown = [0,6,7];
         this.skillsManaCost = [0, 100, 100];
@@ -45,7 +45,7 @@ export class Tank extends Hero {
 
         this.name = 'Tank';
         this.color = 'rgb(153, 102, 71)';
-        
+
         this.stepMove = 24;
         this.side = 40;
 

@@ -1,47 +1,30 @@
-const nothingSkills = {
-    nothing: function () {
-        console.log('Not a Skill');
+export function heal(game, command, ammount) {
+    game.state.players[command.playerId].life += ammount;
+
+    if (game.state.players[command.playerId].life > game.state.players[command.playerId].totalLife) {
+        game.state.players[command.playerId].life = game.state.players[command.playerId].totalLife;
     }
-};
+}
 
-const MageSkills = {
-    Q: function (command) {
-        const hasMana = reduceMana(game, command, 0);
+export function reduceMana(game, command, skillId) {
+    if (game.state.players[command.playerId].mana >= game.state.players[command.playerId].class.skillsManaCost[skillId]) {
+        game.state.players[command.playerId].mana -= game.state.players[command.playerId].class.skillsManaCost[skillId];
+        return true;
+    } else {
+        return false;
+    }
+}
 
-        if (!hasMana) {
-            return;
+export function initiateCooldownDrop(game, command, skillId) {
+    let time = game.state.players[command.playerId].coolDown[skillId];
+
+    const coolDownDrop = setInterval(function () {
+        time -= 1;
+        game.state.players[command.playerId].coolDown[skillId] -= 1;
+
+        if (time <= 0) {
+            clearInterval(coolDownDrop);
+            game.state.players[command.playerId].coolDown[skillId] = 0;
         }
-
-        if (game.state.players[command.playerId].coolDown[0] === 0) {
-
-            throwSkillShoot(command, 100, 10, 'regular', 10);
-
-            game.state.players[command.playerId].coolDown[0] = game.state.players[command.playerId].class.coolDown[0];
-            initiateCoolDownDrop(game, command, 0);
-        }
-    },
-
-    E: function (command) {
-        const hasMana = reduceMana(game, command, 1);
-
-        if (!hasMana) {
-            return;
-        }
-
-        if (game.state.players[command.playerId].coolDown[1] === 0) {
-
-            heal(game, command, 100);
-
-            game.state.players[command.playerId].coolDown[1] = game.state.players[command.playerId].class.coolDown[1];
-            initiateCoolDownDrop(game, command, 1);
-        }
-    },
-
-    R: function (command) {
-        if (game.state.players[command.playerId].coolDown[2] === 0) {
-
-            game.state.players[command.playerId].coolDown[2] = game.state.players[command.playerId].class.coolDown[2];
-            initiateCoolDownDrop(game, command, 2);
-        }
-    },
-};
+    }, 1000)
+}
