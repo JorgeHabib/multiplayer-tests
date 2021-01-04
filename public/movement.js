@@ -1,15 +1,5 @@
 import createGame from "./createGame";
 
-export function movementKeyPressed(keyPressed){
-    if (keyPressed === 'w' || keyPressed === 'W' ||
-        keyPressed === 's' || keyPressed === 'S' ||
-        keyPressed === 'a' || keyPressed === 'A' ||
-        keyPressed === 'd' || keyPressed === 'D')
-            return true;
-
-    return false;
-}
-
 function vertical_movement(state, player, direction){
     const stepMove = player.class ? player.class.stepMove : 5;
     const playerSide = player.class ? player.class.side : 5;
