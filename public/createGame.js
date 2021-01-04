@@ -1,3 +1,5 @@
+import { movePlayer } from './movement.js';
+
 export default function createGame() {
     const state = {
         players: {},
@@ -163,160 +165,9 @@ export default function createGame() {
         return;
     };
 
-    function movePlayer(command) {
-        notifyAll(command);
-
-        const acceptedMoves = {
-            w(player) {
-                let tempY = player.y - stepMove;
-
-                if (tempY < 0) {
-                    tempY = 0;
-                }
-
-                for (let i = player.x; i < player.x + playerSide; i++) {
-                    for (let j = tempY; j < tempY + playerSide; j++) {
-                        if (state.mapMatrix[i][j] === 1) {
-                            console.log('UPS');
-                            return;
-                        }
-                    }
-                }
-
-                player.y = tempY;
-            },
-
-            W(player) {
-                let tempY = player.y - stepMove;
-
-                if (tempY < 0)
-                    tempY = 0;
-
-                for (let i = player.x; i < player.x + playerSide; i++) {
-                    for (let j = tempY; j < tempY + playerSide; j++) {
-                        if (state.mapMatrix[i][j] === 1) {
-                            return;
-                        }
-                    }
-                }
-
-                player.y = tempY;
-            },
-
-            s(player) {
-                let tempY = player.y + stepMove;
-
-                if (tempY > state.screen.height - playerSide)
-                    tempY = state.screen.height - playerSide;
-
-                for (let i = player.x; i < player.x + playerSide; i++) {
-                    for (let j = tempY; j < tempY + playerSide; j++) {
-                        if (state.mapMatrix[i][j] === 1) {
-                            return;
-                        }
-                    }
-                }
-
-                player.y = tempY;
-            },
-
-            S(player) {
-                let tempY = player.y + stepMove;
-
-                if (tempY > state.screen.height - playerSide)
-                    tempY = state.screen.height - playerSide;
-
-                for (let i = player.x; i < player.x + playerSide; i++) {
-                    for (let j = tempY; j < tempY + playerSide; j++) {
-                        if (state.mapMatrix[i][j] === 1) {
-                            return;
-                        }
-                    }
-                }
-
-                player.y = tempY;
-            },
-
-            a(player) {
-                let tempX = player.x - stepMove;
-
-                if (tempX < 0)
-                    tempX = 0;
-
-                for (let i = tempX; i < tempX + playerSide; i++) {
-                    for (let j = player.y; j < player.y + playerSide; j++) {
-                        if (state.mapMatrix[i][j] === 1) {
-                            return;
-                        }
-                    }
-                }
-
-                player.x = tempX;
-            },
-
-            A(player) {
-                let tempX = player.x - stepMove;
-
-                if (tempX < 0)
-                    tempX = 0;
-
-                for (let i = tempX; i < tempX + playerSide; i++) {
-                    for (let j = player.y; j < player.y + playerSide; j++) {
-                        if (state.mapMatrix[i][j] === 1) {
-                            return;
-                        }
-                    }
-                }
-
-                player.x = tempX;
-            },
-
-            d(player) {
-                let tempX = player.x + stepMove;
-
-                if (tempX > state.screen.width - playerSide)
-                    tempX = state.screen.width - playerSide;
-
-                for (let i = tempX; i < tempX + playerSide; i++) {
-                    for (let j = player.y; j < player.y + playerSide; j++) {
-                        if (state.mapMatrix[i]) {
-                            if (state.mapMatrix[i][j] && state.mapMatrix[i][j] === 1) {
-                                console.log(`Localized 1 at: ${i} ${j}`);
-                                return;
-                            }
-                        }
-                    }
-                }
-
-                player.x = tempX;
-            },
-
-            D(player) {
-                let tempX = player.x + stepMove;
-
-                if (tempX > state.screen.width - playerSide)
-                    tempX = state.screen.width - playerSide;
-
-                for (let i = tempX; i < tempX + playerSide; i++) {
-                    for (let j = player.y; j < player.y + playerSide; j++) {
-                        if (state.mapMatrix[i]) {
-                            if (state.mapMatrix[i][j] && state.mapMatrix[i][j] === 1) {
-                                console.log(`Localized 1 at: ${i} ${j}`);
-                                return;
-                            }
-                        }
-                    }
-                }
-
-                player.x = tempX;
-            }
-        }
-
         const keyPressed = command.keyPressed;
         const playerId = command.playerId;
         const player = state.players[playerId];
-        const stepMove = player.class ? player.class.stepMove : 5;
-        const playerSide = player.class ? player.class.side : 5;
         const moveFunction = acceptedMoves[keyPressed];
 
         if (player && moveFunction) {
@@ -334,7 +185,7 @@ export default function createGame() {
             keyPressed === 'a' || keyPressed === 'A' ||
             keyPressed === 'd' || keyPressed === 'D') {
             command.type = 'controll-player';
-            movePlayer(command);
+            acceptedMoves = movePlayer(state, command);
         } else if (keyPressed === 'q' || keyPressed === 'Q' ||
             keyPressed === 'e' || keyPressed === 'E' ||
             keyPressed === 'r' || keyPressed === 'R') {
