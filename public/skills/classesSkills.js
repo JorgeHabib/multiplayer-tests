@@ -1,4 +1,4 @@
-import {heal, reduceMana, initiateCooldownDrop} from './skills.js';
+import { heal, reduceMana, initiateCooldownDrop } from './skills.js';
 import { throwSkillShoot } from './skillshots.js';
 
 export const nothingSkills = {
