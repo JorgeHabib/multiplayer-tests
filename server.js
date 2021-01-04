@@ -1,7 +1,7 @@
 import express from 'express';
 import http from 'http';
 import createGame from './public/createGame.js';
-import { getSkillObject } from './public/classes.js';
+import { getSkillObject } from './public/spells.js';
 import socketio from 'socket.io';
 
 const app = express();

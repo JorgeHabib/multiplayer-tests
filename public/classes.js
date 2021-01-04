@@ -1,5 +1,4 @@
 import { Mage, Tank, God } from './entity.js';
-import { nothingSkills, MageSkills } from './skills.js';
 
 export function Classes() {
     const classes = [
@@ -56,40 +55,6 @@ function handleSelectClass(divClasses, currentClass, game, playerId) {
             childNode.classList.remove('classSelected');
         }
     }
-}
-
-export function getSkillObject(game, blueSideChar, redSideChar) {
-    function heal(game, command, ammount) {
-        game.state.players[command.playerId].life += ammount;
-
-        if (game.state.players[command.playerId].life > game.state.players[command.playerId].totalLife) {
-            game.state.players[command.playerId].life = game.state.players[command.playerId].totalLife;
-        }
-    }
-
-    function throwSkillShoot(command, damage, velocity, type, radius) {
-        const objShoot = {
-            type,
-            damage,
-            velocity,
-            radius
-        }
-
-        game.handleSkillShoots(objShoot, command);
-    }
-
-    const skills = {
-        nothingSkills,
-        MageSkills,
-    }
-
-    const returnedObj = {
-        blueSideSkills: skills[blueSideChar],
-        redSideSkills: skills[redSideChar],
-        nothingSkills
-    }
-
-    return returnedObj;
 }
 
 function reduceMana(game, command, skillId) {
