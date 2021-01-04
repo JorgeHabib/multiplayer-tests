@@ -1,4 +1,4 @@
-import { movePlayer } from './movement.js';
+import { movementKey, movePlayer } from './movement.js';
 
 export default function createGame() {
     const state = {
@@ -180,13 +180,12 @@ export default function createGame() {
     function handleKeyboardEventSERVER(command) {
         const keyPressed = command.keyPressed;
 
-        if (keyPressed === 'w' || keyPressed === 'W' ||
-            keyPressed === 's' || keyPressed === 'S' ||
-            keyPressed === 'a' || keyPressed === 'A' ||
-            keyPressed === 'd' || keyPressed === 'D') {
+        if (movementKey(keyPressed)) {
             command.type = 'controll-player';
-            acceptedMoves = movePlayer(state, command);
-        } else if (keyPressed === 'q' || keyPressed === 'Q' ||
+            acceptedMoves = movePlayer(this, command);
+        }
+
+        else if (keyPressed === 'q' || keyPressed === 'Q' ||
             keyPressed === 'e' || keyPressed === 'E' ||
             keyPressed === 'r' || keyPressed === 'R') {
             if (state.gameStarted) {

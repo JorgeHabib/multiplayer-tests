@@ -1,3 +1,15 @@
+import createGame from "./createGame";
+
+export function movementKey(keyPressed){
+    if (keyPressed === 'w' || keyPressed === 'W' ||
+        keyPressed === 's' || keyPressed === 'S' ||
+        keyPressed === 'a' || keyPressed === 'A' ||
+        keyPressed === 'd' || keyPressed === 'D')
+            return true;
+
+    return false;
+}
+
 function vertical_movement(state, player, direction){
     const stepMove = player.class ? player.class.stepMove : 5;
     const playerSide = player.class ? player.class.side : 5;
@@ -12,7 +24,7 @@ function vertical_movement(state, player, direction){
 
     for (let i = player.x; i < player.x + playerSide; i++)
         for(let j = tempY; j < tempY + playerSide; j++)
-            if(state.mapMatrix[i][j] === 1)
+            if(createGame.state.mapMatrix[i][j] === 1)
                 return;
 
     player.y = tempY;
@@ -32,14 +44,17 @@ function horizontal_movement(state, player, direction){
 
     for (let i = tempX; i < tempX + playerSide; i++)
         for (let j = player.y; j < player.y + playerSide; j++)
-            if (state.mapMatrix[i][j] === 1)
+            if (createGame.state.mapMatrix[i][j] === 1)
                 return;
 
     player.x = tempX;
 }
 
-export function movePlayer(state, command) {
-    notifyAll(command);
+export function movePlayer(game, command) {
+    game.player = player;
+    game.state = state;
+
+    game.notifyAll(command);
 
     const acceptedMoves = {
         w(player) { vertical_movement(state, player, 1) }, W(player) { vertical_movement(state, player, 1) },
