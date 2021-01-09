@@ -1,19 +1,17 @@
-function movementKeyPressed(keyPressed){
-    if (keyPressed === 'w' || keyPressed === 'W' ||
-        keyPressed === 's' || keyPressed === 'S' ||
-        keyPressed === 'a' || keyPressed === 'A' ||
-        keyPressed === 'd' || keyPressed === 'D')
+export function movementKeyPressed(key){
+    if( key == 'W' || key == 'w' ||
+        key == 'A' || key == 'a' ||
+        key == 'S' || key == 's' ||
+        key == 'D' || key == 'd' )
             return true;
-
     return false;
 }
 
-function skillKeyPressed(keyPressed){
-    if (keyPressed === 'q' || keyPressed === 'Q' ||
-        keyPressed === 'e' || keyPressed === 'E' ||
-        keyPressed === 'r' || keyPressed === 'R')
+export function skillKeyPressed(key){
+    if( key == 'Q' || key == 'q' ||
+        key == 'E' || key == 'e' ||
+        key == 'R' || key == 'r' )
             return true;
-    return false;
 }
 
 export default function createKeyboardListener(game, document, socket) {
@@ -23,8 +21,8 @@ export default function createKeyboardListener(game, document, socket) {
 
     document.addEventListener('keydown', handleKeyDown);
 
-    function registerPlayerId(playerId) {
-        state.playerId = playerId;
+    function registerPlayerID(playerID) {
+        state.playerId = playerID;
     };
 
     function handleKeyDown(e) {
@@ -64,13 +62,11 @@ export function handleKeyboardEventSERVER(game, command) {
 
     if ( movementKeyPressed(keyPressed) ) {
         command.type = 'controll-player';
-        acceptedMoves = movePlayer(game, command);
-    }
-
-    else if ( skillKeyPressed(keyPressed) ) {
+        game.movePlayer(game, command);
+    } else if ( skillKeyPressed(keyPressed) ) {
         if (state.gameStarted) {
-            command.type = 'ability-used';
-            skillPlayer(game, keyPressed, command);
+            command.type = 'abitily-used';
+            game.playerSkill(game, command);
         }
     }
 }

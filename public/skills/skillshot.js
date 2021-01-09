@@ -1,5 +1,4 @@
-import moveSkillShootRegular from '../movement.js';
-import { nothingSkills, MageSkills } from './classes.js';
+import MageSkills from '../classes/skills/mage.js';
 
 function getSkillIndex(keyPressed) {
     if (keyPressed === 'q' || keyPressed === 'Q')
@@ -10,12 +9,10 @@ function getSkillIndex(keyPressed) {
         return 2;
     else
         return -1;
-};
+}
 
-export function skillPlayer(game, keyPressed, command) {
-
-    const state = game.state;
-    game.notifyAll(command);
+export function playerSkill(command) {
+    notifyAll(command);
 
     const keyPressed = command.keyPressed;
     const playerId = command.playerId;
@@ -36,7 +33,7 @@ export function skillPlayer(game, keyPressed, command) {
     const skillNothing = state.allSkills['nothingSkills'];
 
     let skillFunction;
-
+    
     if (skillIndex < 0) {
         skillFunction = skillNothing[skillName];
     } else if (playerId === state.blueId) {
@@ -44,16 +41,35 @@ export function skillPlayer(game, keyPressed, command) {
     } else if (playerId === state.redId) {
         skillFunction = skillFunctionsRed[skillName];
     }
-
+    
     if (player && skillFunction) {
         skillFunction(command);
     }
-
+    
     return;
 }
 
-export function handleSkillShoots(game, objSkill, command) {
-    const state = game.state;
+function moveSkillShootRegular(game, objSkill, velVector, command, index) {
+    velVector.x *= objSkill.velocity;
+    velVector.y *= objSkill.velocity;
+
+    const skillLoop = setInterval(function () {
+        const skill = state.skillShoots[index];
+
+        skill.x += velVector.x;
+        skill.y += velVector.y;
+
+        if (collisionSkillWall(skill, command) || 
+            collisionSkillStructure(skill, command) || 
+            collisionSkillPlayer(skill, command)) {
+                clearInterval(skillLoop);
+                game.state.skillShoots.splice(index, 1);
+                console.log('HIT PLAYER');
+        }
+    }, 3);
+}
+
+export function handleSkillShoots(objSkill, command) {
     const player = state.players[command.playerId];
 
     if (objSkill.type === 'regular') {
@@ -80,19 +96,19 @@ export function handleSkillShoots(game, objSkill, command) {
 
         state.skillShoots.push(skillShootObject);
         const index = state.skillShoots.length - 1;
-        moveSkillShootRegular(game, objSkill, velVector, command, index);
+        moveSkillShootRegular(objSkill, velVector, command, index);
     }
 }
 
-export function throwSkillShoot(command, damage, velocity, type, radius) {
-    const objShoot = {
-        type,
-        damage,
-        velocity,
-        radius
-    }
 
-    game.handleSkillShoots(game, objShoot, command);
+export function collisionSkillPlayer(skill, command) {
+    command.type = 'damage-to-player';
+    return false;
+}
+
+export function collisionSkillStructure(skill, command) {
+    command.type = 'damage-to-structure';
+    return false;
 }
 
 export function collisionSkillWall(skill, command) {
@@ -105,27 +121,35 @@ export function collisionSkillWall(skill, command) {
     return false;
 }
 
-export function collisionSkillPlayer(skill, command) {
-    command.type = 'damage-to-player';
-    return false;
-}
 
-export function collisionSkillStructure(skill, command) {
-    command.type = 'damage-to-structure';
-    return false;
-}
+export function createSkillshot(game, blueSideChar, redSideChar) {
+    const nothingSkills = {
+        nothing: function () {
+            console.log('Not a Skill');
+        }
+    }
 
-export function getSkillObject(game, blueSideChar, redSideChar) {
+    function throwSkillshot(command, damage, velocity, type, radius){
+        const skillshot = {
+            type,
+            damage,
+            velocity,
+            radius
+        }
+    
+        game.handleSkillShoots(skillshot, command);
+    }
+
     const skills = {
         nothingSkills,
         MageSkills,
     }
 
-    const returnedObj = {
+    const skillshot = {
         blueSideSkills: skills[blueSideChar],
         redSideSkills: skills[redSideChar],
         nothingSkills
     }
 
-    return returnedObj;
+    return skillshot;
 }

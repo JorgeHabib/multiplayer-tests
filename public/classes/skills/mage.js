@@ -1,11 +1,4 @@
-import { heal, reduceMana, initiateCooldownDrop } from './effects.js';
-import { throwSkillShoot } from './skillshots.js';
-
-export const nothingSkills = {
-    nothing: function () {
-        console.log('Not a Skill');
-    }
-};
+import { reduceMana } from '../../skills/properties.js';
 
 export const MageSkills = {
     Q: function (command) {
@@ -20,7 +13,7 @@ export const MageSkills = {
             throwSkillShoot(command, 100, 10, 'regular', 10);
 
             game.state.players[command.playerId].coolDown[0] = game.state.players[command.playerId].class.coolDown[0];
-            initiateCooldownDrop(game, command, 0);
+            initiateCoolDownDrop(game, command, 0);
         }
     },
 
@@ -36,7 +29,7 @@ export const MageSkills = {
             heal(game, command, 100);
 
             game.state.players[command.playerId].coolDown[1] = game.state.players[command.playerId].class.coolDown[1];
-            initiateCooldownDrop(game, command, 1);
+            initiateCoolDownDrop(game, command, 1);
         }
     },
 
@@ -44,7 +37,7 @@ export const MageSkills = {
         if (game.state.players[command.playerId].coolDown[2] === 0) {
 
             game.state.players[command.playerId].coolDown[2] = game.state.players[command.playerId].class.coolDown[2];
-            initiateCooldownDrop(game, command, 2);
+            initiateCoolDownDrop(game, command, 2);
         }
-    },
+    }
 };

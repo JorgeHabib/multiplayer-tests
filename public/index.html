@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-
+    
 <head>
     <meta charset="UTF-8">
     <title>MyMoba</title>
@@ -19,13 +19,15 @@
 
     <script type="module">
         import * as utils from './utils.js';
-        import { renderScreen, insertMenuArea, createUpdate, updateStats, loadCoolDownSkills } from './renderScreen.js';
-        import createGame from './createGame.js';
+        import renderScreen from './screen/render.js';
+        import renderMenuArea from './screen/menu.js';
+        import { updateStats, updateCooldowns } from './screen/update.js'
+        import createGame from './game/createGame.js';
         import createKeyboardListener from './keyboard.js';
-        import { handleReady, handlePreparingMode } from './handleReady.js';
-        import { Classes, fitClasses } from './classSelection.js';
-        import getSkillObject from './skills/skillshots.js';
-        import * as alias from './alias.js';
+        import handleReady from './screen/ready.js';
+        import handlePreparingMode from './screen/preparation.js';
+        import fitClasses from './classes.js';
+        import createSkillshot from './skills/skillshot.js'
 
         const socket = io();
 
@@ -33,23 +35,23 @@
         const keyboardListener = createKeyboardListener(game, document, socket);
 
         socket.on('connect', () => {
-            const playerId = socket.id;
-            console.log(`Player connected: ${playerId}`);
+            const playerID = socket.id;
+            console.log(`Player connected: ${playerID}`);
 
             const flexibleHeight = window.innerHeight - 30;
 
             const screen = document.getElementById('screen');
             screen.style.height = `${flexibleHeight}px`;
-            renderScreen(screen, game, requestAnimationFrame, playerId);
+            renderScreen(screen, game, requestAnimationFrame, playerID);
         });
 
         socket.on('setup', (state) => {
-            const playerId = socket.id;
+            const playerID = socket.id;
             game.setState(state);
             const screen = document.getElementById('screen');
 
-            if (game.state.players[playerId].spect === false) {
-                keyboardListener.registerPlayerId(playerId);
+            if (game.state.players[playerID].spect === false) {
+                keyboardListener.registerPlayerID(playerID);
                 keyboardListener.subscribeObserver((command) => {
                     socket.emit(command.type, command);
                 });
@@ -59,7 +61,7 @@
                     const scaleX = screen.width / rect.width;
                     const scaleY = screen.height / rect.height;
 
-                    game.state.players[playerId].mouse = {
+                    game.state.players[playerID].mouse = {
                         mouseX: (e.clientX - rect.left) * scaleX,
                         mouseY: (e.clientY - rect.top) * scaleY
                     }
@@ -69,12 +71,12 @@
                 button.innerHTML = 'READY!';
                 button.id = 'ready';
                 button.className = 'notReady'
-                button.addEventListener('click', () => handleReady(button, socket, game, playerId));
+                button.addEventListener('click', () => handleReady(button, socket, game, playerID));
 
                 const divClasses = document.createElement('div');
                 divClasses.id = 'classDesc';
                 divClasses.className = 'classDesc';
-                fitClasses(divClasses, game, playerId);
+                fitClasses(divClasses, game, playerID);
 
                 const infos = document.getElementById('myInfos');
                 infos.appendChild(divClasses);
@@ -83,44 +85,44 @@
         });
 
         socket.on('controll-player', (command) => {
-            console.log(`Receiving ${command.type} -> ${command.playerId}`);
+            console.log(`Receiving ${command.type} -> ${command.playerID}`);
 
-            const playerId = socket.id;
+            const playerID = socket.id;
 
             game.movePlayer(command);
         });
 
-        socket.on('ability-used', (command) => {
-            console.log(`Receiving ${command.type} -> ${command.playerId}`);
+        socket.on('abitily-used', (command) => {
+            console.log(`Receiving ${command.type} -> ${command.playerID}`);
 
-            const playerId = socket.id;
-            const updateObject = createUpdate();
+            const playerID = socket.id;
 
-            let enemyId;
-            if (game.state.blueId === playerId) {
-                enemyId = game.state.redId;
+            let enemyID;
+            
+            if (game.state.blueID === playerID) {
+                enemyID = game.state.redID;
             } else {
-                enemyId = game.state.blueId;
+                enemyID = game.state.blueID;
             }
 
-            game.spellPlayer(command);
-            updateStats(game, document, playerId, enemyId);
+            game.playerSkill(command);
+            updateStats(game, document, playerID, enemyID);
         })
 
         socket.on('add-player', (command) => {
-            console.log(`Receiving ${command.type} -> ${command.playerId}`);
+            console.log(`Receiving ${command.type} -> ${command.playerID}`);
             game.addPlayer(command);
         });
 
         socket.on('remove-player', (command) => {
-            console.log(`Receiving ${command.type} -> ${command.playerId}`);
+            console.log(`Receiving ${command.type} -> ${command.playerID}`);
             game.removePlayer(command);
         });
 
         socket.on('blue-side-ready', (command) => {
-            const playerId = socket.id;
+            const playerID = socket.id;
 
-            console.log(`Receiving ${command.type} -> ${command.playerId}`);
+            console.log(`Receiving ${command.type} -> ${command.playerID}`);
             game.setReady(command);
 
             if (game.state.gameStarted) {
@@ -128,7 +130,7 @@
                 const redSideChar = `${game.state.players[game.state.redId].class.className}Skills`;
                 const skills = getSkillObject(game, blueSideChar, redSideChar);
                 game.setupSkills(skills);
-                loadCoolDownSkills(game, document, playerId);
+                updateCooldowns(game, document, playerID);
 
                 const button = document.getElementById('ready');
                 const classInfo = document.getElementById('classDesc');
@@ -137,14 +139,14 @@
                 button.remove();
 
                 handlePreparingMode(document, game);
-                insertMenuArea(game, playerId, document);
+                insertMenuArea(game, playerID, document);
             }
         });
 
         socket.on('red-side-ready', (command) => {
-            const playerId = socket.id;
+            const playerID = socket.id;
 
-            console.log(`Receiving ${command.type} -> ${command.playerId}`);
+            console.log(`Receiving ${command.type} -> ${command.playerID}`);
             game.setReady(command);
 
             if (game.state.gameStarted) {
@@ -153,7 +155,7 @@
                 console.log(redSideChar);
                 const skills = getSkillObject(game, blueSideChar, redSideChar);
                 game.setupSkills(skills);
-                loadCoolDownSkills(game, document, playerId);
+                updateCooldowns(game, document, playerID);
 
                 const button = document.getElementById('ready');
                 const classInfo = document.getElementById('classDesc');
@@ -162,7 +164,7 @@
                 button.remove();
 
                 handlePreparingMode(document, game);
-                insertMenuArea(game, playerId, document);
+                insertMenuArea(game, playerID, document);
             }
         });
 

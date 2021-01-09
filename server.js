@@ -1,7 +1,7 @@
 import express from 'express';
 import http from 'http';
-import createGame from './public/createGame.js';
-import { getSkillObject } from './public/skills/skillshots.js';
+import createGame from './public/game/createGame.js';
+import getSkillshot from './public/skills/skillshot.js';
 import socketio from 'socket.io';
 
 const app = express();
@@ -20,57 +20,57 @@ game.subscribeObserver((command) => {
 })
 
 sockets.on('connection', (socket) => {
-    const playerId = socket.id;
-    console.log(`Player connected: ${playerId}`);
+    const playerID = socket.id;
+    console.log(`Player connected: ${playerID}`);
 
     if (game.state.hasBlueSide) {
         if (!game.state.hasRedSide) {
             game.state.hasRedSide = true;
 
             const player = {
-                playerId,
+                playerID,
                 blueSide: false,
                 redSide: true,
                 spect: false
             };
 
             game.addPlayer(player);
-            console.log(`Player ${playerId} is on red side`);
+            console.log(`Player ${playerID} is on red side`);
         } else {
             if (game.state.gameStarted === true) {
                 console.log('game-started')
                 socket.emit('forceDisconnect');
             } else {
                 const player = {
-                    playerId,
+                    playerID,
                     spect: true,
                     blueSide: false,
                     redSide: false
                 }
 
                 game.addPlayer(player)
-                console.log(`Player ${playerId} is on spec mode`);
+                console.log(`Player ${playerID} is on spec mode`);
             }
         }
     } else {
         game.state.hasBlueSide = true;
 
         const player = {
-            playerId,
+            playerID,
             redSide: false,
             blueSide: true,
             spect: false
         }
 
         game.addPlayer(player);
-        console.log(`Player ${playerId} is on blue side`);
+        console.log(`Player ${playerID} is on blue side`);
     }
 
     socket.emit('setup', game.state);
 
     socket.on('keyboard-event', (command) => {
-        command.playerId = playerId;
-        game.handleKeyboardEventSERVER(game, command);
+        command.playerID = playerID;
+        game.handleKeyboardEventSERVER(command);
     });
 
     socket.on('disconnect', () => {
@@ -83,7 +83,7 @@ sockets.on('connection', (socket) => {
         if (game.state.gameStarted) {
             const blueSideChar = `${game.state.players[game.state.blueId].class.className}Skills`;
             const redSideChar = `${game.state.players[game.state.redId].class.className}Skills`;
-            const skills = getSkillObject(game, blueSideChar, redSideChar);
+            const skills = getSkillshot(game, blueSideChar, redSideChar);
             game.setupSkills(skills);
         }
     });
@@ -94,7 +94,7 @@ sockets.on('connection', (socket) => {
         if (game.state.gameStarted) {
             const blueSideChar = `${game.state.players[game.state.blueId].class.className}Skills`;
             const redSideChar = `${game.state.players[game.state.redId].class.className}Skills`;
-            const skills = getSkillObject(game, blueSideChar, redSideChar);
+            const skills = getSkillshot(game, blueSideChar, redSideChar);
             game.setupSkills(skills);
         }
     })
